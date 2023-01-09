@@ -2,7 +2,7 @@
 
 org 0x7c00
 bits 16
-start: jmp boot
+jmp boot
 
 ;;constant and variable definitions
 

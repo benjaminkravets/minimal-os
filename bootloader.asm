@@ -6,8 +6,8 @@ org 0x7c00
 bits 16
 start: jmp boot
 
- ;; constant and variable definitions
-msg db "Welcome to My Operating System!", 0ah, 0dh, 0h
+;; constant and variable definitions
+  msg db "Welcome to My Operating System! Welcome to My Operating System! ", 0ah, 0dh, 0h
 
 boot:
   cli ; no interrupts
