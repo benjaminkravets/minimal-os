@@ -2,7 +2,7 @@
 ; Bootloader.asm
 ; A Simple Bootloader
 ;******************************************
-org 0x7c00
+
 bits 16
 start: jmp boot
 
@@ -27,7 +27,8 @@ boot:
 
   mov ah, 0x02 ; read sectors from disk
   int 0x13 ; call the BIOS routine
-  jmp 0x50:0x0 ; jump and execute the sector!
+  ;jmp 0x50:0x0 ; jump and execute the sector!
+  jmp 0xa00
 
   hlt ; halt the system
 
