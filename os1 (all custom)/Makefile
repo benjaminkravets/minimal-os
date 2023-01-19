@@ -1,5 +1,5 @@
 
-all: kernel bootloader image
+all: kernel bootloader image iso
 
 .PHONY: kernel bootloader image clean
 
@@ -15,5 +15,7 @@ bootloader:
 image:
 	rm os-image
 	cat boot_sect.bin kernel.bin > os-image
+	
+	
 
 	
