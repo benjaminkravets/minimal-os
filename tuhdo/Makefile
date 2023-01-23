@@ -1,32 +1,38 @@
-CFLAGS+=-ffreestanding -nostdlib -gdwarf-4 -m32 -ggdb3
+BUILD_DIR=build
+BOOTLOADER=$(BUILD_DIR)/boot/bootloader
+KERNEL=$(BUILD_DIR)/kern/kernel
+DISK_IMG=disk.img
+QEMU_DEBUG=-d int,mmu,pcall,guest_errors,cpu_reset
+QEMU_STDIO= -monitor stdio
 
+all: build_dir disk
 
-all: bootloader bootdisk
+build_dir:
+	[ -d build/ ] || mkdir build
+	[ -d build/kern ] || mkdir build/kern
+	[ -d build/boot ] || mkdir build/boot
 
-.PHONY: kernel
-kernel:
-	gcc $(CFLAGS) -m32 -g -c kernel.c
-	ld -m elf_i386 -nmagic -o kernel -T kernel.lds kernel.o
-	
-	nasm -f bin bootloader.asm -o bootloader.o
-	
-	dd if=/dev/zero of=kernel.img bs=512 count=2880
-	dd conv=notrunc if=bootloader.o of=kernel.img bs=512 count=1 seek=0
-	dd conv=notrunc if=kernel of=kernel.img bs=512 count=$$(($(shell stat --printf="%s" kernel)/512)) seek=1
-	qemu-system-i386 -M 2056 -machine q35 -fda kernel.img #-gdb tcp::26000 -S
+.PHONY:
+$(BOOTLOADER):
+	make -C bootloader
 
-printtest:
-	nasm -f bin bootloading_print.asm -o bootloading_print.o
-	dd if=/dev/zero of=printtest.img bs=512 count=2880
-	dd conv=notrunc if=bootloading_print.o of=printtest.img bs=512 count=1 seek=0
-	qemu-system-i386 -machine q35 -fda printtest.img # -gdb tcp::26000 -S
+.PHONY:
+$(KERNEL):
+	make -C kernel
 
-bootloader:
-	nasm -f bin bootloader.asm -o bootloader.o
-	nasm -f bin sample.asm -o sample.o
-	
-bootdisk: bootloader
-	dd if=/dev/zero of=disk.img bs=512 count=2880
-	dd conv=notrunc if=bootloader.o of=disk.img bs=512 count=1 seek=0
-	dd conv=notrunc if=sample.o of=disk.img bs=512 count=1 seek=1
-	qemu-system-i386 -M 2056 -machine q35 -fda disk.img # -gdb tcp::26000 -S
+.PHONY:
+disk: $(BOOTLOADER) $(KERNEL)
+	make -C bootloader
+	make -C kernel
+	dd if=/dev/zero of=$(DISK_IMG) bs=512 count=2880
+	dd if=$(BOOTLOADER) of=$(DISK_IMG) bs=512 count=1 seek=0
+	dd if=$(KERNEL) of=$(DISK_IMG) bs=512 count=30 seek=1
+
+qemu-gdb:
+	qemu-system-i386 $(QEMU_DEBUG) $(QEMU_STDIO) -machine q35 -fda $(DISK_IMG)
+
+.PHONY:
+clean:
+	killall qemu-system-i386 || true
+	killall gdb || true
+	rm -rf build $(DISK_IMG)
