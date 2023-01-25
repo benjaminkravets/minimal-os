@@ -18,6 +18,7 @@ KERNEL_OFFSET equ 0x1000     ; This is the memory offset to which we will load o
 %include "gdt.asm"
 %include "print_string_pm.asm"
 %include "switch_to_pm.asm"
+%include "idt.asm"
 
 [ bits 16]
                              ; load_kernel
