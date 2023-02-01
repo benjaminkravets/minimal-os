@@ -8,7 +8,9 @@ clean:
 
 kernel:
 	gcc -ffreestanding -c kernel.c -o kernel.o -m32 -nostdlib -fno-builtin
-	ld -melf_i386 -o kernel.bin kernel_entry.o kernel.o -Ttext 0x1000 
+	
+	#ld -melf_i386 -o kernel.bin kernel_entry.o kernel.o -Ttext 0x1000 
+	ld -melf_i386 -o kernel.bin kernel_entry.o kernel.o ./idt/idt_s.o ./idt/idt.o ./idt/common.o ./idt/vsprintf.o ./idt/printk.o ./idt/panic.o ./idt/monitor.o -Ttext 0x1000 
 	
 bootloader:
 	nasm boot_sect.asm -f bin -o boot_sect.bin
