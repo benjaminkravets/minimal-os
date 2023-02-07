@@ -3,6 +3,9 @@ all: bootloader kernel image qemu
 
 .PHONY: kernel bootloader image clean
 
+.PRECIOUS: idt_s.asm
+
+
 clean:
 	-rm *.o $(objects)
 
@@ -13,6 +16,7 @@ kernel:
 	ld -melf_i386 -o kernel.bin kernel_entry.o kernel.o ./idt/idt_s.o ./idt/idt.o ./idt/common.o ./idt/vsprintf.o ./idt/printk.o ./idt/panic.o ./idt/monitor.o -Ttext 0x1000 
 	
 bootloader:
+	nasm idt_s.asm -f elf -o idt_s.o
 	nasm boot_sect.asm -f bin -o boot_sect.bin
 	nasm kernel_entry.asm -f elf -o kernel_entry.o
 	

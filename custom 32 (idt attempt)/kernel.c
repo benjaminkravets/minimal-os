@@ -1,4 +1,4 @@
-
+extern void init_idt();
 
 void main () {
 // Create a pointer to a char , and point it to the first text cell of
@@ -13,4 +13,5 @@ char * video_memory2 = ( char*) 0xb8144 ;
 // (i.e. display ’X’ in the top - left of the screen ).
   *video_memory2 = 'Y';
 
+init_idt();
 }
