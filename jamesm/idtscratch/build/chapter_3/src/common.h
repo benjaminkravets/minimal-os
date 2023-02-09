@@ -13,6 +13,10 @@ typedef          short int16_t;
 typedef unsigned char  uint8_t;
 typedef          char  int8_t;
 
+#include "printk.h"
+
+#include "panic.h"
+
 void outb(uint16_t port, uint8_t value);
 uint8_t inb(uint16_t port);
 uint16_t inw(uint16_t port);

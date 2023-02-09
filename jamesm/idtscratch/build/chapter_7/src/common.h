@@ -14,6 +14,9 @@ typedef unsigned char  uint8_t;
 typedef          char  int8_t;
 
 #include "printk.h"
+
+#include "panic.h"
+
 #include "heap.h"
 
 void outb(uint16_t port, uint8_t value);

@@ -50,9 +50,6 @@ clean:
 link:
 	@echo Linking
 	@$(LD) $(LDFLAGS) -o kernel $(SOBJECTS) $(COBJECTS)
-link2:
-	@echo Linking
-	@$(LD) $(LDFLAGS) -o kernel2 ./src/idt_s.o ./src/idt.o ./src/common.o ./src/vsprintf.o ./src/printk.o ./src/panic.o ./src/monitor.o
 
 docs:
 	cd doc; make html

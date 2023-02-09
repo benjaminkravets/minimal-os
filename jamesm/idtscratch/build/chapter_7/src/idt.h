@@ -1,3 +1,4 @@
+
 // 
 // idt.h - Defines the interface for initialising the IDT.
 //         Also defines needed structures.
@@ -98,6 +99,7 @@ extern void isr29();
 extern void isr30();
 extern void isr31();
 extern void isr255();
+
 extern void irq0 ();
 extern void irq1 ();
 extern void irq2 ();
@@ -114,5 +116,6 @@ extern void irq12();
 extern void irq13();
 extern void irq14();
 extern void irq15();
+
 #endif
 

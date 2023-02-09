@@ -3,20 +3,21 @@ all: bootloader kernel image qemu
 
 .PHONY: kernel bootloader image clean
 
-.PRECIOUS: idt_s.asm
+CFLAGS=-nostdlib -fno-builtin -m32
+LDFLAGS=-melf_i386
+ASFLAGS=-felf
 
 
 clean:
 	-rm *.o $(objects)
 
 kernel:
-	gcc -ffreestanding -c kernel.c -o kernel.o -m32 -nostdlib -fno-builtin
+	gcc -ffreestanding -c kernel.c -o kernel.o $(CFLAGS)
 	
 	#ld -melf_i386 -o kernel.bin kernel_entry.o kernel.o -Ttext 0x1000 
-	ld -melf_i386 -o kernel.bin kernel_entry.o kernel.o ./idt/idt_s.o ./idt/idt.o ./idt/common.o ./idt/vsprintf.o ./idt/printk.o ./idt/panic.o ./idt/monitor.o -Ttext 0x1000 
+	ld $(LDFLAGS) -o kernel.bin kernel_entry.o kernel.o -Ttext 0x1000 ./idt/idt_s.o ./idt/idt.o ./idt/common.o ./idt/vsprintf.o ./idt/printk.o ./idt/panic.o ./idt/monitor.o
 	
 bootloader:
-	nasm idt_s.asm -f elf -o idt_s.o
 	nasm boot_sect.asm -f bin -o boot_sect.bin
 	nasm kernel_entry.asm -f elf -o kernel_entry.o
 	
