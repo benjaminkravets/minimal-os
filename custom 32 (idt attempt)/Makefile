@@ -15,7 +15,7 @@ kernel:
 	gcc -ffreestanding -c kernel.c -o kernel.o $(CFLAGS)
 	
 	#ld -melf_i386 -o kernel.bin kernel_entry.o kernel.o -Ttext 0x1000 
-	ld $(LDFLAGS) -o kernel.bin kernel_entry.o kernel.o -Ttext 0x1000 ./idt/idt_s.o ./idt/idt.o ./idt/common.o ./idt/vsprintf.o ./idt/printk.o ./idt/panic.o ./idt/monitor.o
+	ld $(LDFLAGS) -o kernel.bin kernel_entry.o kernel.o -Ttext 0x1000
 	
 bootloader:
 	nasm boot_sect.asm -f bin -o boot_sect.bin
