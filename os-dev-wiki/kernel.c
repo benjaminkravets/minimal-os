@@ -1,6 +1,7 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
+#include "gdt.c"
  
 /* Check if the compiler thinks you are targeting the wrong operating system. */
 #if defined(__linux__)
@@ -111,4 +112,12 @@ void kernel_main(void)
  
 	/* Newline support is left as an exercise. */
 	terminal_writestring("Hello, kernel World!\n");
+
+	create_descriptor(0, 0, 0);
+    create_descriptor(0, 0x000FFFFF, (GDT_CODE_PL0));
+    create_descriptor(0, 0x000FFFFF, (GDT_DATA_PL0));
+    create_descriptor(0, 0x000FFFFF, (GDT_CODE_PL3));
+    create_descriptor(0, 0x000FFFFF, (GDT_DATA_PL3));
+
+	terminal_writestring("Hi");
 }
